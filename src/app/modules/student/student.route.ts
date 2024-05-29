@@ -3,10 +3,10 @@ import { StudentControllers } from './student.controller';
 
 const router = express.Router();
 
-router.get('/', StudentControllers.getAllStudent);
-
 router.get('/:studentId', StudentControllers.getSingleStudent);
 
 router.delete('/:studentId', StudentControllers.deleteStudent);
+
+router.get('/', StudentControllers.getAllStudent);
 
 export const StudentRoutes = router;
