@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import config from '../../config';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
@@ -6,6 +7,8 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.models';
 import { generateStudentId } from './user.utils';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createStudentIntoDb = async (password: string, payload: TStudent) => {
   //   Create a user object
@@ -22,20 +25,41 @@ const createStudentIntoDb = async (password: string, payload: TStudent) => {
     payload.admissionSemester,
   );
 
-  //   set genarated id
-  userData.id = await generateStudentId(admissionSemester as TAcademicSemester);
+  const session = await mongoose.startSession();
 
-  // create a user
-  const newUser = await User.create(userData);
+  try {
+    session.startTransaction();
+    //   set genarated id
+    userData.id = await generateStudentId(
+      admissionSemester as TAcademicSemester,
+    );
 
-  //   create a student
-  if (Object.keys(newUser).length) {
+    // create a user (transaction-1)
+    const newUser = await User.create([userData], { session }); // array
+
+    //   create a student
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Faild to create user');
+    }
+
     // set id , _id as user
-    payload.id = newUser.id; // embading id
-    payload.user = newUser._id; //referance _id
+    payload.id = newUser[0].id; // embading id
+    payload.user = newUser[0]._id; //referance _id
 
-    const newstudent = await Student.create(payload);
+    // create a student (transection-2)
+    const newstudent = await Student.create([payload], { session });
+
+    if (!newstudent.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
     return newstudent;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
   }
 };
 
