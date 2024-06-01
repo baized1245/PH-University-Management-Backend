@@ -51,3 +51,15 @@ export const AcademicDepartment = model<TAcademicDepartment>(
   'AcademicDepartment',
   academicDepartmentSchema,
 );
+
+//pattern
+/*
+success
+message
+errorSource:[
+  path:"",
+  message:""
+]
+stack
+
+*/
