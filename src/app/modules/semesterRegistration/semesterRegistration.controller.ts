@@ -21,13 +21,16 @@ const createSemesterRegistration = catchAsync(
 
 const getAllSemesterRegistrations = catchAsync(
   async (req: Request, res: Response) => {
-    // const result =
-    // sendResponse(res,{
-    //     statusCode:httpStatus.OK,
-    //     success:true,
-    //     message:"Semester Registration is created successfully!",
-    //     data:result
-    // })
+    const result =
+      await SemesterRegistrationService.getAllSemesterRegistrationsFromDB(
+        req.query,
+      );
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Semester Registration is retrieve successfully!',
+      data: result,
+    });
   },
 );
 
@@ -35,14 +38,15 @@ const getSingleSemesterRegistration = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    // const result =
+    const result =
+      await SemesterRegistrationService.getSingleSemesterRegistrationFromDB(id);
 
-    // sendResponse(res,{
-    //     statusCode:httpStatus.OK,
-    //     success:true,
-    //     message:"Semester Registration is created successfully!",
-    //     data:result
-    // })
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Semester Registration is retrieve successfully!',
+      data: result,
+    });
   },
 );
 
@@ -50,14 +54,15 @@ const updateSemesterRegistration = catchAsync(
   async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    // const result =
+    const result =
+      await SemesterRegistrationService.updateSemesterRegistrationIntoDB(id);
 
-    // sendResponse(res,{
-    //     statusCode:httpStatus.OK,
-    //     success:true,
-    //     message:"Semester Registration is created successfully!",
-    //     data:result
-    // })
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Semester Registration is created successfully!',
+      data: result,
+    });
   },
 );
 
