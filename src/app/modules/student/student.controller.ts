@@ -1,18 +1,8 @@
-import { StudentServices } from './student.service';
-import sendResponse from '../../utils/sendResponse';
+import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
-// import { z } from 'zod';
-
-const getAllStudent = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllstudentFromDB(req.query);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Student are retrieve successfully!',
-    data: result,
-  });
-});
+import sendResponse from '../../utils/sendResponse';
+import { StudentServices } from './student.service';
 
 const getSingleStudent = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -22,6 +12,17 @@ const getSingleStudent = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Student createdb successfully!',
+    data: result,
+  });
+});
+
+const getAllStudent: RequestHandler = catchAsync(async (req, res) => {
+  const result = await StudentServices.getAllstudentFromDB(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student are retrieve successfully!',
     data: result,
   });
 });

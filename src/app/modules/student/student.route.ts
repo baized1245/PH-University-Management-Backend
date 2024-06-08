@@ -5,6 +5,8 @@ import { updateStudentValidationSchema } from './student.validation';
 
 const router = express.Router();
 
+router.get('/', StudentControllers.getAllStudent);
+
 router.get('/:id', StudentControllers.getSingleStudent);
 
 router.patch(
@@ -14,7 +16,5 @@ router.patch(
 );
 
 router.delete('/:id', StudentControllers.deleteStudent);
-
-router.get('/', StudentControllers.getAllStudent);
 
 export const StudentRoutes = router;

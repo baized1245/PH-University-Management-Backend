@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
 import mongoose from 'mongoose';
 import config from '../../config';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
@@ -25,7 +24,7 @@ const createStudentIntoDb = async (password: string, payload: TStudent) => {
   const userData: Partial<TUser> = {};
 
   //if password is not given , use deafult password
-  userData.password = password || (config.default_password as string);
+  userData.password = password || config.default_password;
 
   //set student role
   userData.role = 'student';
