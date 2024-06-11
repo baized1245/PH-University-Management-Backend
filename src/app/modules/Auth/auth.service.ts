@@ -5,6 +5,7 @@ import AppError from '../../errors/AppError';
 import { User } from '../user/user.models';
 import { TLoginUser } from './auth.interface';
 import config from '../../config';
+import { createToken } from './auth.utils';
 
 const loginUser = async (payLoad: TLoginUser) => {
   //checking if the user is exist
@@ -44,12 +45,21 @@ const loginUser = async (payLoad: TLoginUser) => {
     role: user.role,
   };
 
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: '90d',
-  });
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
 
   return {
     accessToken,
+    refreshToken,
     needsPasswordChange: user?.needsPasswordChange,
   };
 };
