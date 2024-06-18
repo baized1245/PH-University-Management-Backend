@@ -6,6 +6,7 @@ import { User } from '../user/user.models';
 import { TLoginUser } from './auth.interface';
 import config from '../../config';
 import { createToken } from './auth.utils';
+import { sendEmail } from '../../utils/sendEmail';
 
 const loginUser = async (payLoad: TLoginUser) => {
   //checking if the user is exist
@@ -197,13 +198,15 @@ const forgetPassword = async (userId: string) => {
     role: user.role,
   };
 
-  const accessToken = createToken(
+  const resetToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
     '30m',
   );
 
-  const resetUILink = `http://localhost:3000?id=${user.id}&token=${accessToken}`;
+  const resetUILink = `http://localhost:3000?id=${user.id}&token=${resetToken}`;
+
+  sendEmail()
 
   console.log(resetUILink);
 };
