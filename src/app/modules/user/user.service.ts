@@ -209,9 +209,17 @@ const getMe = async (userId: string, role: string) => {
   return result;
 };
 
+const changeStatus = async (id: string, payLoad: { status: string }) => {
+  const result = await User.findByIdAndUpdate(id, payLoad, {
+    new: true,
+  });
+  return result;
+};
+
 export const UserServices = {
   createStudentIntoDb,
   createFacultyIntoDB,
   createAdminIntoDB,
   getMe,
+  changeStatus,
 };
